@@ -1,11 +1,11 @@
 package scan
 
 import (
-	"github.com/tatsushid/go-fastping"
 	"log"
 	"net"
-	"os"
 	"time"
+
+	"github.com/tatsushid/go-fastping"
 )
 
 var pinger = fastping.NewPinger()
@@ -18,7 +18,6 @@ func Init(response chan string) {
 
 func listener(addr *net.IPAddr, rtt time.Duration) {
 	responseChan <- addr.String()
-
 }
 
 func PingHosts(hosts []string) error {

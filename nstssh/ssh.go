@@ -1,4 +1,4 @@
-package ccssh
+package nstssh
 
 import (
 	"bytes"
