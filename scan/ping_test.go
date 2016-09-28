@@ -8,7 +8,7 @@ import (
 func TestPing(t *testing.T) {
 	pingChan := make(chan string)
 	Init(pingChan)
-	go PingHosts([]string{"192.168.2.1"})
+	go PingHosts([]string{"192.168.2.1", "192.168.2.9"})
 	log.Println("pinging")
 	for {
 		select {

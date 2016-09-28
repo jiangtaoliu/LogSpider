@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"log"
+	"net"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/bahusvel/NetworkScannerThingy/scan"
@@ -32,36 +36,38 @@ type Host struct {
 var hostMap = map[string]*Host{}
 var scannerTimer *time.Timer
 
-func identifyHost(address string) (*Host, error) {
-	return &Host{IPAddress: address, Status: STATUS_UP}, nil
+func newHost(address string) (*Host, error) {
+	log.Println("New Host", address)
+	return &Host{IPAddress: address}, nil
 }
 
 func hostAlive(host string) {
 	if _, ok := hostMap[host]; !ok {
-		tmpHost, err := identifyHost(host)
+		tmpHost, err := newHost(host)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		// setup other services to run and gather information for the host
-
 		hostMap[host] = tmpHost
 	}
 	existingHost := hostMap[host]
+
+	existingHost.Status = STATUS_UP
+	existingHost.StatusTime = time.Now()
+
 	if existingHost.Status != STATUS_UP {
 		hostUp(existingHost)
 	}
-
 }
 
 func hostUp(host *Host) {
-	host.Status = STATUS_UP
-	host.StatusTime = time.Now()
+	log.Println("Host went back up", host)
 }
 
 func hostDown(host *Host) {
 	host.Status = STATUS_DOWN
 	host.StatusTime = time.Now()
+	log.Println("Host down", host)
 }
 
 func timeoutScanner() {
@@ -74,12 +80,35 @@ func timeoutScanner() {
 	scannerTimer.Reset(HOST_TIMEOUT)
 }
 
+func incrementIP(ip net.IP) net.IP {
+	for j := len(ip) - 1; j >= 0; j-- {
+		ip[j]++
+		if ip[j] > 0 {
+			break
+		}
+	}
+	return ip
+}
+
+func IPRange(iprange string) ([]string, error) {
+	parts := strings.Split(iprange, "-")
+	if len(parts) != 2 {
+		return []string{}, errors.New("Invalid IP Range Format")
+	}
+	end := net.ParseIP(parts[1])
+	ips := []string{}
+	for ip := net.ParseIP(parts[0]); bytes.Compare(ip, end) <= 0; ip = incrementIP(ip) {
+		ips = append(ips, ip.String())
+	}
+	return ips, nil
+}
+
 func main() {
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
 		cli.StringSliceFlag{
-			Name: "ipranges, -i",
+			Name: "ipranges, i",
 		},
 	}
 
@@ -87,9 +116,18 @@ func main() {
 		if len(c.StringSlice("ipranges")) == 0 {
 			return cli.NewExitError("You did not specify any ranges", -1)
 		}
+		ips := []string{}
+		for _, iprange := range c.StringSlice("ipranges") {
+			ipsInRange, err := IPRange(iprange)
+			if err != nil {
+				return err
+			}
+			ips = append(ips, ipsInRange...)
+		}
+		log.Println("Pinging hosts", ips)
 		pingChan := make(chan string)
 		scan.Init(pingChan)
-		scan.PingHosts(c.StringSlice("ipranges"))
+		go scan.PingHosts(ips)
 		scannerTimer = time.AfterFunc(HOST_TIMEOUT, timeoutScanner)
 		for {
 			select {

@@ -8,12 +8,16 @@ import (
 	"github.com/tatsushid/go-fastping"
 )
 
+const PING_INTERVAL = 5 * time.Second
+
 var pinger = fastping.NewPinger()
 
 func Init(alive chan string) {
+	pinger.MaxRTT = PING_INTERVAL
 	pinger.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
 		alive <- addr.String()
 	}
+	pinger.OnIdle = Reping
 }
 
 func PingHosts(hosts []string) error {
@@ -24,6 +28,12 @@ func PingHosts(hosts []string) error {
 			return err
 		}
 	}
-	pinger.Run()
-	return nil
+	return pinger.Run()
+}
+
+func Reping() {
+	err := pinger.Run()
+	if err != nil {
+		log.Println(err)
+	}
 }
