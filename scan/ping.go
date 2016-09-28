@@ -9,15 +9,11 @@ import (
 )
 
 var pinger = fastping.NewPinger()
-var responseChan chan string
 
-func Init(response chan string) {
-	responseChan = response
-	pinger.OnRecv = listener
-}
-
-func listener(addr *net.IPAddr, rtt time.Duration) {
-	responseChan <- addr.String()
+func Init(alive chan string) {
+	pinger.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
+		alive <- addr.String()
+	}
 }
 
 func PingHosts(hosts []string) error {
