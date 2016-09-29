@@ -17,7 +17,6 @@ func Init(alive chan string) {
 	pinger.OnRecv = func(addr *net.IPAddr, rtt time.Duration) {
 		alive <- addr.String()
 	}
-	pinger.OnIdle = Reping
 }
 
 func PingHosts(hosts []string) error {
@@ -28,12 +27,6 @@ func PingHosts(hosts []string) error {
 			return err
 		}
 	}
-	return pinger.Run()
-}
-
-func Reping() {
-	err := pinger.Run()
-	if err != nil {
-		log.Println(err)
-	}
+	pinger.RunLoop()
+	return nil
 }

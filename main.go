@@ -3,12 +3,15 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/bahusvel/NetworkScannerThingy/logs"
+	"github.com/bahusvel/NetworkScannerThingy/nstssh"
 	"github.com/bahusvel/NetworkScannerThingy/scan"
 	"github.com/urfave/cli"
 )
@@ -31,14 +34,16 @@ type Host struct {
 	OS         string
 	Status     string
 	StatusTime time.Time
+	SSHEnabled bool
 }
 
 var hostMap = map[string]*Host{}
 var scannerTimer *time.Timer
+var logChannel = make(chan logs.LogEntry)
 
 func newHost(address string) (*Host, error) {
 	log.Println("New Host", address)
-	return &Host{IPAddress: address}, nil
+	return &Host{IPAddress: address, SSHEnabled: true}, nil
 }
 
 func hostAlive(host string) {
@@ -52,16 +57,40 @@ func hostAlive(host string) {
 	}
 	existingHost := hostMap[host]
 
-	existingHost.Status = STATUS_UP
-	existingHost.StatusTime = time.Now()
-
 	if existingHost.Status != STATUS_UP {
-		hostUp(existingHost)
+		go hostUp(existingHost)
+	} else {
+		existingHost.Status = STATUS_UP
+		existingHost.StatusTime = time.Now()
 	}
 }
 
 func hostUp(host *Host) {
+	host.Status = STATUS_UP
+	host.StatusTime = time.Now()
 	log.Println("Host went back up", host)
+
+	if !host.SSHEnabled {
+		return
+	}
+
+	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
+	if err != nil {
+		log.Println("Cannot establish ssh connectivity to", host)
+		return
+	} else {
+		log.Println("CopyID to", host, "Successful")
+	}
+
+	hostLogs, err := logs.FindLogs(host.IPAddress)
+	if err != nil {
+		log.Println("Cannot fetch logs from", host)
+		return
+	}
+
+	for _, hostLog := range hostLogs {
+		go logs.WatchLog(host.IPAddress, hostLog, logChannel)
+	}
 }
 
 func hostDown(host *Host) {
@@ -73,7 +102,7 @@ func hostDown(host *Host) {
 func timeoutScanner() {
 	timeout := time.Now().Add(-HOST_TIMEOUT)
 	for _, host := range hostMap {
-		if host.StatusTime.Before(timeout) {
+		if host.Status == STATUS_UP && host.StatusTime.Before(timeout) {
 			hostDown(host)
 		}
 	}
@@ -104,6 +133,7 @@ func IPRange(iprange string) ([]string, error) {
 }
 
 func main() {
+	nstssh.IDENTITY = os.Getenv("HOME") + "/.ssh/id_rsa"
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
@@ -113,6 +143,7 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
+
 		if len(c.StringSlice("ipranges")) == 0 {
 			return cli.NewExitError("You did not specify any ranges", -1)
 		}
@@ -133,7 +164,10 @@ func main() {
 			select {
 			case host := <-pingChan:
 				hostAlive(host)
+			case logEntry := <-logChannel:
+				fmt.Printf("%+v\n", logEntry)
 			}
+
 		}
 		//return nil
 	}

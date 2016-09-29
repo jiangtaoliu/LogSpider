@@ -14,3 +14,11 @@ func TestSTDIO(t *testing.T) {
 	}
 	fmt.Println(string(output))
 }
+
+func TestConnectFail(t *testing.T) {
+	IDENTITY = os.Getenv("HOME") + "/.ssh/id_rsa"
+	err := Command("192.168.1.248", "uname").Run()
+	if err != nil {
+		t.Error(err)
+	}
+}

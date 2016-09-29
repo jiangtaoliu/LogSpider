@@ -76,7 +76,7 @@ func (c *SessionCommand) StderrPipe() (io.ReadCloser, error) {
 	return nopCloser{reader}, err
 }
 func (c *SessionCommand) StdoutPipe() (io.ReadCloser, error) {
-	reader, err := c.Session.StderrPipe()
+	reader, err := c.Session.StdoutPipe()
 	return nopCloser{reader}, err
 }
 func (c *SessionCommand) Wait() error {
@@ -152,8 +152,12 @@ func sshClient(host string) (*ssh.Client, error) {
 	return ssh.Dial("tcp", host+":22", config)
 }
 
-func CopyID(from string, idPath string, to string, toPassword string) error {
-	cmd := Command(from, "cat", idPath)
+func CopyID(from string, to string, toPassword string) error {
+	cmd := Command(to, "uname")
+	if cmd != nil {
+		return nil
+	}
+	cmd = Command(from, "cat", IDENTITY+".pub")
 	data, err := cmd.Output()
 	if err != nil {
 		return err
