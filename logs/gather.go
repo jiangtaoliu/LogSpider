@@ -9,6 +9,19 @@ import (
 	"github.com/bahusvel/NetworkScannerThingy/nstssh"
 )
 
+var CurrentTime = time.Now()
+
+func init() {
+	go updateTime()
+}
+
+func updateTime() {
+	for {
+		CurrentTime = time.Now()
+		time.Sleep(1)
+	}
+}
+
 type LogEntry struct {
 	Host  string
 	Log   string
@@ -17,7 +30,7 @@ type LogEntry struct {
 }
 
 func FindLogs(host string) ([]string, error) {
-	cmd := nstssh.Command(host, "find", "/var/log", "-name", "*.log")
+	cmd := nstssh.Command(host, "find", "/var/log", "-name", "*log")
 	if cmd == nil {
 		return []string{}, errors.New("Cannot establish connection")
 	}
@@ -47,7 +60,7 @@ func WatchLog(host string, log string, eventChannel chan LogEntry) error {
 		reader := bufio.NewReader(out)
 		line, err := reader.ReadString('\n')
 		for ; err == nil; line, err = reader.ReadString('\n') {
-			eventChannel <- LogEntry{Host: host, Log: log, Entry: strings.Trim(line, "\n")}
+			eventChannel <- LogEntry{Host: host, Time: CurrentTime, Log: log, Entry: strings.Trim(line, "\n")}
 		}
 	}()
 	return cmd.Start()
