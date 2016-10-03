@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/bahusvel/NetworkScannerThingy/logs"
 	"github.com/bahusvel/NetworkScannerThingy/nstssh"
-	"github.com/bahusvel/NetworkScannerThingy/output"
 	"github.com/bahusvel/NetworkScannerThingy/scan"
 	"github.com/urfave/cli"
 )
@@ -140,6 +140,9 @@ func main() {
 		cli.StringSliceFlag{
 			Name: "ipranges, i",
 		},
+		cli.StringFlag{
+			Name: "output, o",
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
@@ -148,9 +151,11 @@ func main() {
 			return cli.NewExitError("You did not specify any ranges", -1)
 		}
 
-		elasticClient := output.ElasticOutput{ServerURL: "http://192.168.1.83:9200", IndexName: "logs"}
+		if c.String("output") == "" {
+			return cli.NewExitError("You did not specify output file", -1)
+		}
 
-		err := elasticClient.Init()
+		file, err := os.Create(c.String("output"))
 		if err != nil {
 			return err
 		}
@@ -173,10 +178,7 @@ func main() {
 			case host := <-pingChan:
 				hostAlive(host)
 			case logEntry := <-logChannel:
-				err := elasticClient.SendLogEntry(logEntry)
-				if err != nil {
-					log.Println("Lost log entry", logEntry)
-				}
+				file.WriteString(fmt.Sprintf("%s,%s,%s,%s\n", logEntry.Host, logEntry.Log, logEntry.Time, logEntry.Entry))
 			}
 
 		}

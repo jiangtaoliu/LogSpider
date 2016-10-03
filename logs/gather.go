@@ -18,7 +18,7 @@ func init() {
 func updateTime() {
 	for {
 		CurrentTime = time.Now()
-		time.Sleep(1)
+		time.Sleep(1 * time.Second)
 	}
 }
 
