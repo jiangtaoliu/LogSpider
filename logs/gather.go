@@ -10,6 +10,7 @@ import (
 )
 
 var CurrentTime = time.Now()
+var excludeList = []string{"/var/lib/ceph"}
 
 func init() {
 	go updateTime()
@@ -29,8 +30,17 @@ type LogEntry struct {
 	Entry string
 }
 
+func isExclude(log string) bool {
+	for _, exclude := range excludeList {
+		if strings.HasPrefix(log, exclude) {
+			return true
+		}
+	}
+	return false
+}
+
 func FindLogs(host string) ([]string, error) {
-	cmd := nstssh.Command(host, "find", "/var/log", "-name", "*log")
+	cmd := nstssh.Command(host, "find", "/var", "-name", "*log")
 	if cmd == nil {
 		return []string{}, errors.New("Cannot establish connection")
 	}
@@ -40,7 +50,7 @@ func FindLogs(host string) ([]string, error) {
 	}
 	logFiles := []string{}
 	for _, line := range strings.Split(string(data), "\n") {
-		if line != "" {
+		if line != "" && !isExclude(line) {
 			logFiles = append(logFiles, line)
 		}
 	}
