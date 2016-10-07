@@ -164,7 +164,7 @@ func sshClient(host string) (*ssh.Client, error) {
 	}
 	var err error
 	client, err = ssh.Dial("tcp", host+":22", config)
-	if err != nil {
+	if err == nil {
 		mapMutex.Lock()
 		connectionCache[host] = client
 		mapMutex.Unlock()
