@@ -1,0 +1,5 @@
+{"log":"\r\n","stream":"stdout","time":"2016-10-07T00:34:52.285996476Z"}
+{"log":"\u001b[42m\r\n","stream":"stdout","time":"2016-10-07T00:34:52.286311075Z"}
+{"log":" Poste.io container should be running now at local address http://172.17.0.2\r\n","stream":"stdout","time":"2016-10-07T00:34:52.286597748Z"}
+{"log":"\u001b[m\r\n","stream":"stdout","time":"2016-10-07T00:34:52.286897275Z"}
+{"log":"\r\n","stream":"stdout","time":"2016-10-07T00:34:52.2870346Z"}

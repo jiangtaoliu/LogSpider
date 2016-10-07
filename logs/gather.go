@@ -70,7 +70,10 @@ func WatchLog(host string, log string, eventChannel chan LogEntry) error {
 		reader := bufio.NewReader(out)
 		line, err := reader.ReadString('\n')
 		for ; err == nil; line, err = reader.ReadString('\n') {
-			eventChannel <- LogEntry{Host: host, Time: CurrentTime, Log: log, Entry: strings.Trim(line, "\n")}
+			line = strings.Trim(line, "\n")
+			if line != "" {
+				eventChannel <- LogEntry{Host: host, Time: CurrentTime, Log: log, Entry: strings.Trim(line, "\n")}
+			}
 		}
 	}()
 	return cmd.Start()

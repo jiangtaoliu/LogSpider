@@ -10,13 +10,14 @@ import (
 	"strings"
 	"time"
 
+	//"github.com/bahusvel/NetworkScannerThingy/analyse"
 	"github.com/bahusvel/NetworkScannerThingy/logs"
 	"github.com/bahusvel/NetworkScannerThingy/nstssh"
 	"github.com/bahusvel/NetworkScannerThingy/scan"
 	"github.com/urfave/cli"
 )
 
-const HOST_TIMEOUT = 10 * time.Second
+const HOST_TIMEOUT = 30 * time.Second
 
 const (
 	OS_LINUX   = "linux"
@@ -77,6 +78,7 @@ func hostUp(host *Host) {
 	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
 	if err != nil {
 		log.Println("Cannot establish ssh connectivity to", host)
+		host.SSHEnabled = false
 		return
 	} else {
 		log.Println("CopyID to", host, "Successful")
@@ -133,7 +135,7 @@ func IPRange(iprange string) ([]string, error) {
 }
 
 func main() {
-	nstssh.IDENTITY = os.Getenv("HOME") + "/.ssh/id_rsa"
+	nstssh.Init(os.Getenv("HOME") + "/.ssh/id_rsa")
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
@@ -144,7 +146,7 @@ func main() {
 			Name: "output, o",
 		},
 	}
-
+	//knowledgeBase := make(analyse.KnowledgeDB)
 	app.Action = func(c *cli.Context) error {
 
 		if len(c.StringSlice("ipranges")) == 0 {
@@ -178,7 +180,10 @@ func main() {
 			case host := <-pingChan:
 				hostAlive(host)
 			case logEntry := <-logChannel:
-				file.WriteString(fmt.Sprintf("%s,%s,%s,%s\n", logEntry.Host, logEntry.Log, logEntry.Time, logEntry.Entry))
+				//_, isNew := knowledgeBase.Classify(logEntry)
+				//if isNew {
+				file.WriteString(fmt.Sprintf("%s,%s,%s\n", logEntry.Host, logEntry.Log, logEntry.Entry))
+				//}
 			}
 
 		}

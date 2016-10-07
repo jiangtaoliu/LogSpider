@@ -8,14 +8,30 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"sync"
 
 	"golang.org/x/crypto/ssh"
 )
 
 var (
-	IDENTITY        = "/etc/userver/id_rsa"
+	IDENTITY_PATH   = "/root/.ssh/id_rsa"
+	IDENTITY        ssh.AuthMethod
 	connectionCache = map[string]*ssh.Client{}
+	mapMutex        = sync.RWMutex{}
 )
+
+func Init(Identity string) {
+	IDENTITY_PATH = Identity
+	key, err := ioutil.ReadFile(Identity)
+	if err != nil {
+		log.Fatal(err)
+	}
+	signer, err := ssh.ParsePrivateKey(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+	IDENTITY = ssh.PublicKeys(signer)
+}
 
 type CommandInterface interface {
 	CombinedOutput() ([]byte, error)
@@ -40,6 +56,9 @@ type SessionCommand struct {
 }
 
 func NewSessionCommand(client *ssh.Client, commandString string) (*SessionCommand, error) {
+	if client == nil {
+		return nil, errors.New("Client is nil")
+	}
 	session, err := client.NewSession()
 	if err != nil {
 		return nil, err
@@ -130,26 +149,27 @@ func PasswordCommand(host string, password string, command string) (string, erro
 }
 
 func sshClient(host string) (*ssh.Client, error) {
+	mapMutex.RLock()
 	client, ok := connectionCache[host]
 	if ok != false {
+		mapMutex.RUnlock()
 		return client, nil
 	}
-
-	key, err := ioutil.ReadFile(IDENTITY)
-	if err != nil {
-		return nil, err
-	}
-	signer, err := ssh.ParsePrivateKey(key)
-	if err != nil {
-		return nil, err
-	}
+	mapMutex.RUnlock()
 	config := &ssh.ClientConfig{
 		User: "root",
 		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(signer),
+			IDENTITY,
 		},
 	}
-	return ssh.Dial("tcp", host+":22", config)
+	var err error
+	client, err = ssh.Dial("tcp", host+":22", config)
+	if err != nil {
+		mapMutex.Lock()
+		connectionCache[host] = client
+		mapMutex.Unlock()
+	}
+	return client, err
 }
 
 func CopyID(from string, to string, toPassword string) error {
@@ -157,7 +177,7 @@ func CopyID(from string, to string, toPassword string) error {
 	if cmd != nil {
 		return nil
 	}
-	cmd = Command(from, "cat", IDENTITY+".pub")
+	cmd = Command(from, "cat", IDENTITY_PATH+".pub")
 	data, err := cmd.Output()
 	if err != nil {
 		return err
@@ -183,7 +203,7 @@ func GenerateID(host string, path string) error {
 }
 
 func SendFile(server string, localfile string, remotefile string) error {
-	cmd := exec.Command("scp", "-r", "-i", IDENTITY, localfile, fmt.Sprintf("root@%s:%s", server, remotefile))
+	cmd := exec.Command("scp", "-r", "-i", IDENTITY_PATH, localfile, fmt.Sprintf("root@%s:%s", server, remotefile))
 	return cmd.Run()
 }
 
@@ -196,7 +216,7 @@ func Command(host string, command string, args ...string) CommandInterface {
 		return &SystemCommand{exec.Command("sh", "-c", commandString)}
 	} else {
 		client, err := sshClient(host)
-		if err != nil {
+		if err != nil || client == nil {
 			log.Println("Unable to connect to host", host, err)
 			return nil
 		}
