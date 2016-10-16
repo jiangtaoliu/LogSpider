@@ -48,28 +48,26 @@ func newHost(address string) (*Host, error) {
 }
 
 func hostAlive(host string) {
-	if _, ok := hostMap[host]; !ok {
-		tmpHost, err := newHost(host)
+	existingHost, ok := hostMap[host]
+	if !ok {
+		var err error
+		existingHost, err = newHost(host)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		hostMap[host] = tmpHost
+		hostMap[host] = existingHost
 	}
-	existingHost := hostMap[host]
 
 	if existingHost.Status != STATUS_UP {
 		go hostUp(existingHost)
-	} else {
-		existingHost.Status = STATUS_UP
-		existingHost.StatusTime = time.Now()
 	}
+	existingHost.Status = STATUS_UP
+	existingHost.StatusTime = time.Now()
 }
 
 func hostUp(host *Host) {
-	host.Status = STATUS_UP
-	host.StatusTime = time.Now()
-	log.Println("Host went back up", host)
+	log.Println("Host went up", host)
 
 	if !host.SSHEnabled {
 		return
@@ -87,6 +85,7 @@ func hostUp(host *Host) {
 	hostLogs, err := logs.FindLogs(host.IPAddress)
 	if err != nil {
 		log.Println("Cannot fetch logs from", host)
+		host.SSHEnabled = false
 		return
 	}
 
