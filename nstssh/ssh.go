@@ -164,7 +164,7 @@ func sshClient(host string) (*ssh.Client, error) {
 	}
 	var err error
 	client, err = ssh.Dial("tcp", host+":22", config)
-	if err != nil {
+	if err == nil {
 		mapMutex.Lock()
 		connectionCache[host] = client
 		mapMutex.Unlock()
@@ -174,7 +174,7 @@ func sshClient(host string) (*ssh.Client, error) {
 
 func CopyID(from string, to string, toPassword string) error {
 	cmd := Command(to, "uname")
-	if cmd != nil {
+	if (cmd != nil) && (cmd.Run() != nil) {
 		return nil
 	}
 	cmd = Command(from, "cat", IDENTITY_PATH+".pub")

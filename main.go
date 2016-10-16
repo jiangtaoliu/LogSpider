@@ -90,7 +90,10 @@ func hostUp(host *Host) {
 	}
 
 	for _, hostLog := range hostLogs {
-		go logs.WatchLog(host.IPAddress, hostLog, logChannel)
+		err := logs.WatchLog(host.IPAddress, hostLog, logChannel)
+		if err != nil {
+			log.Printf("Cannot open log %s at %s %s\n", host.IPAddress, hostLog, err)
+		}
 	}
 }
 
