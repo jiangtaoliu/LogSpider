@@ -203,7 +203,9 @@ func SetupMultiPlexing(host string) error {
 		return nil
 	}
 	err = Command(host, "echo MaxSessions 8192 > /etc/ssh/sshd_config; service ssh restart").Run()
+	mapMutex.Lock()
 	delete(connectionCache, host)
+	mapMutex.Unlock()
 	return err
 }
 
