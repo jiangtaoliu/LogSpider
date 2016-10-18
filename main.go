@@ -78,8 +78,11 @@ func hostUp(host *Host) {
 		log.Println("Cannot establish ssh connectivity to", host)
 		host.SSHEnabled = false
 		return
-	} else {
-		log.Println("CopyID to", host, "Successful")
+	}
+
+	err = nstssh.SetupMultiPlexing(host.IPAddress)
+	if err != nil {
+		log.Println(err)
 	}
 
 	hostLogs, err := logs.FindLogs(host.IPAddress)

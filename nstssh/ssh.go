@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"strings"
 	"sync"
 
 	"golang.org/x/crypto/ssh"
@@ -187,6 +188,23 @@ func CopyID(from string, to string, toPassword string) error {
 		return err
 	}
 	return nil
+}
+
+func SetupMultiPlexing(host string) error {
+	cmd := Command(host, "cat", "/etc/ssh/sshd_config")
+	if cmd == nil {
+		return errors.New("Failed to establish connection" + host)
+	}
+	data, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+	if strings.Contains(string(data), "MaxSessions") {
+		return nil
+	}
+	err = Command(host, "echo MaxSessions 8192 > /etc/ssh/sshd_config; service ssh restart").Run()
+	delete(connectionCache, host)
+	return err
 }
 
 func GenerateID(host string, path string) error {

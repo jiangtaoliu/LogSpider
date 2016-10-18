@@ -40,7 +40,7 @@ func isExclude(log string) bool {
 }
 
 func FindLogs(host string) ([]string, error) {
-	cmd := nstssh.Command(host, "find", "/var", "-name", "*log")
+	cmd := nstssh.Command(host, "find", "/var", "-name", "*.log")
 	if cmd == nil {
 		return []string{}, errors.New("Cannot establish connection")
 	}
@@ -54,6 +54,7 @@ func FindLogs(host string) ([]string, error) {
 			logFiles = append(logFiles, line)
 		}
 	}
+	logFiles = append(logFiles, "/var/log/syslog")
 	return logFiles, nil
 }
 
