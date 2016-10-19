@@ -10,8 +10,13 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 
 	"golang.org/x/crypto/ssh"
+)
+
+const (
+	CONNECTION_TIMEOUT = 30 * time.Second
 )
 
 var (
@@ -133,6 +138,7 @@ func PasswordCommand(host string, password string, command string) (string, erro
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
+		Timeout: CONNECTION_TIMEOUT,
 	}
 	client, err := ssh.Dial("tcp", host+":22", config)
 	if err != nil {
@@ -162,6 +168,7 @@ func sshClient(host string) (*ssh.Client, error) {
 		Auth: []ssh.AuthMethod{
 			IDENTITY,
 		},
+		Timeout: CONNECTION_TIMEOUT,
 	}
 	var err error
 	client, err = ssh.Dial("tcp", host+":22", config)
@@ -175,7 +182,10 @@ func sshClient(host string) (*ssh.Client, error) {
 
 func CopyID(from string, to string, toPassword string) error {
 	cmd := Command(to, "uname")
-	if (cmd != nil) && (cmd.Run() != nil) {
+	if cmd == nil {
+		return errors.New("No connection to host")
+	}
+	if cmd.Run() != nil {
 		return nil
 	}
 	cmd = Command(from, "cat", IDENTITY_PATH+".pub")

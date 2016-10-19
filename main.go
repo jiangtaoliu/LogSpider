@@ -43,16 +43,21 @@ var logChannel = make(chan logs.LogEntry)
 func newHost(address string) (*Host, error) {
 	log.Println("New Host", address)
 	host := &Host{IPAddress: address, SSHEnabled: true}
+
+	mapMutex.Lock()
+	hostMap[address] = host
+	mapMutex.Unlock()
+
 	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
 	if err != nil {
-		log.Println("Cannot establish ssh connectivity to", host)
+		log.Println("Cannot establish ssh connectivity to", host, err)
 		host.SSHEnabled = false
-		return nil, err
+		return host, err
 	}
 	err = nstssh.SetupMultiPlexing(host.IPAddress)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return host, err
 	}
 	return host, nil
 }
@@ -66,14 +71,12 @@ func hostAlive(host string) {
 		existingHost, err = newHost(host)
 		if err != nil {
 			log.Println(err)
-			return
 		}
-		mapMutex.Lock()
-		hostMap[host] = existingHost
-		mapMutex.Unlock()
 	}
 
 	if existingHost.Status != STATUS_UP {
+		existingHost.Status = STATUS_UP
+		existingHost.StatusTime = time.Now()
 		start := time.Now()
 		for {
 			err := hostUp(existingHost)
@@ -84,10 +87,13 @@ func hostAlive(host string) {
 				log.Printf("Connection to %s timeout\n", existingHost.IPAddress)
 				break
 			}
+			log.Println("Retrying connection to", host)
 		}
+	} else {
+		existingHost.Status = STATUS_UP
+		existingHost.StatusTime = time.Now()
 	}
-	existingHost.Status = STATUS_UP
-	existingHost.StatusTime = time.Now()
+
 }
 
 func hostUp(host *Host) error {
