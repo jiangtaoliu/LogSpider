@@ -140,6 +140,8 @@ func PasswordCommand(host string, password string, command string) (string, erro
 		},
 		Timeout: CONNECTION_TIMEOUT,
 	}
+	config.SetDefaults()
+	config.Ciphers = append(config.Ciphers, "aes128-cbc")
 	client, err := ssh.Dial("tcp", host+":22", config)
 	if err != nil {
 		return "", err
@@ -170,6 +172,8 @@ func sshClient(host string) (*ssh.Client, error) {
 		},
 		Timeout: CONNECTION_TIMEOUT,
 	}
+	config.SetDefaults()
+	config.Ciphers = append(config.Ciphers, "aes128-cbc")
 	var err error
 	client, err = ssh.Dial("tcp", host+":22", config)
 	if err == nil {

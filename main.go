@@ -40,6 +40,8 @@ var hostMap = map[string]*Host{}
 var scannerTimer *time.Timer
 var logChannel = make(chan logs.LogEntry)
 
+var passwords []string
+
 func newHost(address string) (*Host, error) {
 	log.Println("New Host", address)
 	host := &Host{IPAddress: address, SSHEnabled: true}
@@ -47,8 +49,13 @@ func newHost(address string) (*Host, error) {
 	mapMutex.Lock()
 	hostMap[address] = host
 	mapMutex.Unlock()
-
-	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
+	var err error
+	for _, password := range passwords {
+		err = nstssh.CopyID("localhost", host.IPAddress, password)
+		if err == nil {
+			break
+		}
+	}
 	if err != nil {
 		log.Println("Cannot establish ssh connectivity to", host, err)
 		host.SSHEnabled = false
@@ -87,6 +94,7 @@ func hostAlive(host string) {
 				log.Printf("Connection to %s timeout\n", existingHost.IPAddress)
 				break
 			}
+			time.Sleep(1 * time.Second)
 			log.Println("Retrying connection to", host)
 		}
 	} else {
@@ -147,12 +155,19 @@ func main() {
 		cli.StringFlag{
 			Name: "output, o",
 		},
+		cli.StringSliceFlag{
+			Name: "password, p",
+		},
 	}
 	//knowledgeBase := make(analyse.KnowledgeDB)
 	app.Action = func(c *cli.Context) error {
 
 		if len(c.StringSlice("ipranges")) == 0 {
 			return cli.NewExitError("You did not specify any ranges", -1)
+		}
+
+		if len(c.StringSlice("password")) == 0 {
+			return cli.NewExitError("You did not specify any passwords", -1)
 		}
 
 		if c.String("output") == "" {
