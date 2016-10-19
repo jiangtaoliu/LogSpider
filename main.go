@@ -1,13 +1,10 @@
 package main
 
 import (
-	"bytes"
-	"errors"
 	"fmt"
 	"log"
-	"net"
 	"os"
-	"strings"
+	"sync"
 	"time"
 
 	//"github.com/bahusvel/NetworkScannerThingy/analyse"
@@ -38,17 +35,32 @@ type Host struct {
 	SSHEnabled bool
 }
 
+var mapMutex = sync.RWMutex{}
 var hostMap = map[string]*Host{}
 var scannerTimer *time.Timer
 var logChannel = make(chan logs.LogEntry)
 
 func newHost(address string) (*Host, error) {
 	log.Println("New Host", address)
-	return &Host{IPAddress: address, SSHEnabled: true}, nil
+	host := &Host{IPAddress: address, SSHEnabled: true}
+	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
+	if err != nil {
+		log.Println("Cannot establish ssh connectivity to", host)
+		host.SSHEnabled = false
+		return nil, err
+	}
+	err = nstssh.SetupMultiPlexing(host.IPAddress)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return host, nil
 }
 
 func hostAlive(host string) {
+	mapMutex.RLock()
 	existingHost, ok := hostMap[host]
+	mapMutex.RUnlock()
 	if !ok {
 		var err error
 		existingHost, err = newHost(host)
@@ -56,40 +68,39 @@ func hostAlive(host string) {
 			log.Println(err)
 			return
 		}
+		mapMutex.Lock()
 		hostMap[host] = existingHost
+		mapMutex.Unlock()
 	}
 
 	if existingHost.Status != STATUS_UP {
-		go hostUp(existingHost)
+		start := time.Now()
+		for {
+			err := hostUp(existingHost)
+			if err == nil {
+				break
+			}
+			if time.Now().Sub(start) > HOST_TIMEOUT {
+				log.Printf("Connection to %s timeout\n", existingHost.IPAddress)
+				break
+			}
+		}
 	}
 	existingHost.Status = STATUS_UP
 	existingHost.StatusTime = time.Now()
 }
 
-func hostUp(host *Host) {
+func hostUp(host *Host) error {
 	log.Println("Host went up", host)
 
 	if !host.SSHEnabled {
-		return
-	}
-
-	err := nstssh.CopyID("localhost", host.IPAddress, "cp-x2520")
-	if err != nil {
-		log.Println("Cannot establish ssh connectivity to", host)
-		host.SSHEnabled = false
-		return
-	}
-
-	err = nstssh.SetupMultiPlexing(host.IPAddress)
-	if err != nil {
-		log.Println(err)
+		return nil
 	}
 
 	hostLogs, err := logs.FindLogs(host.IPAddress)
 	if err != nil {
 		log.Println("Cannot fetch logs from", host)
-		host.SSHEnabled = false
-		return
+		return err
 	}
 
 	for _, hostLog := range hostLogs {
@@ -98,6 +109,7 @@ func hostUp(host *Host) {
 			log.Printf("Cannot open log %s at %s %s\n", host.IPAddress, hostLog, err)
 		}
 	}
+	return nil
 }
 
 func hostDown(host *Host) {
@@ -108,35 +120,14 @@ func hostDown(host *Host) {
 
 func timeoutScanner() {
 	timeout := time.Now().Add(-HOST_TIMEOUT)
+	mapMutex.RLock()
 	for _, host := range hostMap {
 		if host.Status == STATUS_UP && host.StatusTime.Before(timeout) {
 			hostDown(host)
 		}
 	}
+	mapMutex.RUnlock()
 	scannerTimer.Reset(HOST_TIMEOUT)
-}
-
-func incrementIP(ip net.IP) net.IP {
-	for j := len(ip) - 1; j >= 0; j-- {
-		ip[j]++
-		if ip[j] > 0 {
-			break
-		}
-	}
-	return ip
-}
-
-func IPRange(iprange string) ([]string, error) {
-	parts := strings.Split(iprange, "-")
-	if len(parts) != 2 {
-		return []string{}, errors.New("Invalid IP Range Format")
-	}
-	end := net.ParseIP(parts[1])
-	ips := []string{}
-	for ip := net.ParseIP(parts[0]); bytes.Compare(ip, end) <= 0; ip = incrementIP(ip) {
-		ips = append(ips, ip.String())
-	}
-	return ips, nil
 }
 
 func main() {
@@ -169,7 +160,7 @@ func main() {
 
 		ips := []string{}
 		for _, iprange := range c.StringSlice("ipranges") {
-			ipsInRange, err := IPRange(iprange)
+			ipsInRange, err := scan.IPRange(iprange)
 			if err != nil {
 				return err
 			}
@@ -183,7 +174,7 @@ func main() {
 		for {
 			select {
 			case host := <-pingChan:
-				hostAlive(host)
+				go hostAlive(host)
 			case logEntry := <-logChannel:
 				//_, isNew := knowledgeBase.Classify(logEntry)
 				//if isNew {

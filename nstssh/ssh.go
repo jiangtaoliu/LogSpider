@@ -243,6 +243,9 @@ func Command(host string, command string, args ...string) CommandInterface {
 		command, err := NewSessionCommand(client, commandString)
 		if err != nil {
 			log.Println("Unable to issue new session", host, err)
+			mapMutex.Lock()
+			delete(connectionCache, host)
+			mapMutex.Unlock()
 			return nil
 		}
 		return command

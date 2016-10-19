@@ -1,8 +1,11 @@
 package scan
 
 import (
+	"bytes"
+	"errors"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/tatsushid/go-fastping"
@@ -29,4 +32,27 @@ func PingHosts(hosts []string) error {
 	}
 	pinger.RunLoop()
 	return nil
+}
+
+func incrementIP(ip net.IP) net.IP {
+	for j := len(ip) - 1; j >= 0; j-- {
+		ip[j]++
+		if ip[j] > 0 {
+			break
+		}
+	}
+	return ip
+}
+
+func IPRange(iprange string) ([]string, error) {
+	parts := strings.Split(iprange, "-")
+	if len(parts) != 2 {
+		return []string{}, errors.New("Invalid IP Range Format")
+	}
+	end := net.ParseIP(parts[1])
+	ips := []string{}
+	for ip := net.ParseIP(parts[0]); bytes.Compare(ip, end) <= 0; ip = incrementIP(ip) {
+		ips = append(ips, ip.String())
+	}
+	return ips, nil
 }
