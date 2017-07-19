@@ -1,0 +1,187 @@
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'dhcp-option' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'dhcp-option' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'route' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: OPTIONS IMPORT: timers and/or timeouts modified
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: OPTIONS IMPORT: --ifconfig/up options modified
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Preserving previous TUN/TAP instance: tun0
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Initialization Sequence Completed
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd[1]: Starting Cleanup of Temporary Directories...
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd-tmpfiles[18367]: [/usr/lib/tmpfiles.d/var.conf:14] Duplicate line for path "/var/log", ignoring.
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd[1]: Started Cleanup of Temporary Directories.
+192.168.7.12,/var/log/cups/access_log,localhost - - [19/Jul/2017:07:35:01 +1200] "POST / HTTP/1.1" 200 349 Create-Printer-Subscriptions successful-ok
+192.168.7.12,/var/log/cups/access_log,localhost - - [19/Jul/2017:07:35:01 +1200] "POST / HTTP/1.1" 200 176 Create-Printer-Subscriptions successful-ok
+192.168.7.12,/var/log/cups/access_log,localhost - - [19/Jul/2017:12:38:10 +1200] "POST / HTTP/1.1" 401 186 Renew-Subscription successful-ok
+192.168.7.12,/var/log/cups/access_log,localhost - tunneluser [19/Jul/2017:12:38:10 +1200] "POST / HTTP/1.1" 200 186 Renew-Subscription successful-ok
+192.168.7.12,/var/log/kern.log,Jul 19 11:14:17 tunneluser NetworkManager[836]: <info>  [1500419657.4390] dhcp4 (eno1): state changed bound -> bound
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4240]   address 192.168.7.12
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4240]   plen 23 (255.255.254.0)
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4240]   gateway 192.168.7.1
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4241]   server identifier 192.168.7.1
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4241]   lease time 7200
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4241]   nameserver '192.168.1.120'
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4241]   domain name 'unitecloud.net'
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4241]   domain search 'unitecloud.net.'
+192.168.7.12,/var/log/kern.log,Jul 19 12:12:28 tunneluser NetworkManager[836]: <info>  [1500423148.4242] dhcp4 (eno1): state changed bound -> bound
+192.168.7.12,/var/log/boot.log,/dev/sda1: clean, 468720/30269440 files, 7497552/121070336 blocks
+192.168.7.12,/var/log/apt/term.log,Processing triggers for desktop-file-utils (0.22-1ubuntu5.1) ...
+192.168.7.12,/var/log/apt/term.log,Processing triggers for gnome-menus (3.13.3-6ubuntu3.1) ...
+192.168.7.12,/var/log/apt/term.log,Processing triggers for bamfdaemon (0.5.3~bzr0+16.04.20160824-0ubuntu1) ...
+192.168.7.12,/var/log/apt/term.log,Rebuilding /usr/share/applications/bamf-2.index...
+192.168.7.12,/var/log/apt/term.log,Processing triggers for mime-support (3.59ubuntu1) ...
+192.168.7.12,/var/log/apt/term.log,Setting up python3-problem-report (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/apt/term.log,Setting up python3-apport (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/apt/term.log,Setting up apport (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/apt/term.log,Setting up apport-gtk (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/apt/term.log,Log ended: 2017-07-19  10:52:55
+192.168.7.12,/var/log/apt/history.log,Start-Date: 2017-07-17  10:27:31
+192.168.7.12,/var/log/apt/history.log,Commandline: /usr/bin/unattended-upgrade
+192.168.7.12,/var/log/apt/history.log,Upgrade: libgssapi3-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libwind0-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), python-samba:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), libwbclient0:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), libheimntlm0-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libheimbase1-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), samba-libs:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), samba-common:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), libhcrypto4-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libsmbclient:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), samba-common-bin:amd64 (2:4.3.11+dfsg-0ubuntu0.16.04.8, 2:4.3.11+dfsg-0ubuntu0.16.04.9), libroken18-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libasn1-8-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libkrb5-26-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1), libhx509-5-heimdal:amd64 (1.7~git20150920+dfsg-4ubuntu1, 1.7~git20150920+dfsg-4ubuntu1.16.04.1)
+192.168.7.12,/var/log/apt/history.log,End-Date: 2017-07-17  10:28:10
+192.168.7.12,/var/log/apt/history.log,Start-Date: 2017-07-19  10:52:22
+192.168.7.12,/var/log/apt/history.log,Commandline: /usr/bin/unattended-upgrade
+192.168.7.12,/var/log/apt/history.log,Upgrade: apport:amd64 (2.20.1-0ubuntu2.6, 2.20.1-0ubuntu2.10), python3-apport:amd64 (2.20.1-0ubuntu2.6, 2.20.1-0ubuntu2.10), apport-gtk:amd64 (2.20.1-0ubuntu2.6, 2.20.1-0ubuntu2.10), python3-problem-report:amd64 (2.20.1-0ubuntu2.6, 2.20.1-0ubuntu2.10)
+192.168.7.12,/var/log/apt/history.log,End-Date: 2017-07-19  10:52:55
+192.168.7.12,/var/log/auth.log,Jul 19 12:47:45 tunneluser sshd[20825]: Server listening on :: port 22.
+192.168.7.12,/var/log/auth.log,Jul 19 12:47:52 tunneluser sshd[12620]: pam_unix(sshd:session): session closed for user logspider
+192.168.7.12,/var/log/auth.log,Jul 19 12:47:52 tunneluser sshd[12663]: pam_unix(sshd:session): session closed for user logspider
+192.168.7.12,/var/log/auth.log,Jul 19 12:47:53 tunneluser sshd[24902]: Accepted publickey for logspider from 192.168.7.94 port 58594 ssh2: RSA SHA256:Y9JTSOxgmunjRaYkLPkqWcEOKwh4B9VJFhD/v0niJvI
+192.168.7.12,/var/log/auth.log,Jul 19 12:48:41 tunneluser sshd[23426]: Accepted publickey for logspider from 192.168.7.94 port 58596 ssh2: RSA SHA256:Y9JTSOxgmunjRaYkLPkqWcEOKwh4B9VJFhD/v0niJvI
+192.168.7.12,/var/log/auth.log,Jul 19 12:52:49 tunneluser sshd[30031]: Accepted publickey for logspider from 192.168.7.94 port 58598 ssh2: RSA SHA256:Y9JTSOxgmunjRaYkLPkqWcEOKwh4B9VJFhD/v0niJvI
+192.168.7.12,/var/log/auth.log,Jul 19 12:53:44 tunneluser sshd[3229]: Accepted publickey for logspider from 192.168.7.94 port 58600 ssh2: RSA SHA256:Y9JTSOxgmunjRaYkLPkqWcEOKwh4B9VJFhD/v0niJvI
+192.168.7.12,/var/log/auth.log,Jul 19 12:53:45 tunneluser sshd[3302]: Received disconnect from 192.168.7.94 port 58600:11: disconnected by user
+192.168.7.12,/var/log/auth.log,Jul 19 12:53:45 tunneluser sshd[3302]: Disconnected from 192.168.7.94 port 58600
+192.168.7.12,/var/log/auth.log,Jul 19 13:03:40 tunneluser sshd[15925]: Accepted publickey for logspider from 192.168.7.94 port 59358 ssh2: RSA SHA256:Y9JTSOxgmunjRaYkLPkqWcEOKwh4B9VJFhD/v0niJvI
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:54 status unpacked apport:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:54 status unpacked apport:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:54 status unpacked apport:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:54 status half-configured apport:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 status installed apport:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 configure apport-gtk:all 2.20.1-0ubuntu2.10 <none>
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 status unpacked apport-gtk:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 status half-configured apport-gtk:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 status installed apport-gtk:all 2.20.1-0ubuntu2.10
+192.168.7.12,/var/log/dpkg.log,2017-07-19 10:52:55 startup packages configure
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "1024x768"x0.0   65.00  1024 1048 1184 1344  768 771 777 806 -hsync -vsync (48.4 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "832x624"x0.0   57.28  832 864 928 1152  624 625 628 667 -hsync -vsync (49.7 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "800x600"x0.0   49.50  800 816 896 1056  600 601 604 625 +hsync +vsync (46.9 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "800x600"x0.0   50.00  800 856 976 1040  600 637 643 666 +hsync +vsync (48.1 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "1152x864"x0.0  108.00  1152 1216 1344 1600  864 865 868 900 +hsync +vsync (67.5 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "1280x1024"x0.0  108.00  1280 1328 1440 1688  1024 1025 1028 1066 +hsync +vsync (64.0 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "1440x900"x0.0  106.50  1440 1520 1672 1904  900 903 909 934 -hsync +vsync (55.9 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.604] (II) modeset(0): Modeline "1440x900"x0.0  136.75  1440 1536 1688 1936  900 903 909 942 -hsync +vsync (70.6 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.605] (II) modeset(0): Modeline "1680x1050"x0.0  187.00  1680 1800 1976 2272  1050 1053 1059 1099 -hsync +vsync (82.3 kHz e)
+192.168.7.12,/var/log/Xorg.0.log,[105530.605] (II) modeset(0): Modeline "1600x1200"x0.0  162.00  1600 1664 1856 2160  1200 1201 1204 1250 +hsync +vsync (75.0 kHz e)
+192.168.7.12,/var/log/lightdm/lightdm.log,[+171997.52s] DEBUG: User /org/freedesktop/Accounts/User1001 added
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: link group rvim updated to point to /usr/bin/vim.basic
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: run with --install /usr/bin/rview rview /usr/bin/vim.basic 30
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: link group rview updated to point to /usr/bin/vim.basic
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: run with --install /usr/bin/vi vi /usr/bin/vim.basic 30 --slave /usr/share/man/fr/man1/vi.1.gz vi.fr.1.gz /usr/share/man/fr/man1/vim.1.gz --slave /usr/share/man/it/man1/vi.1.gz vi.it.1.gz /usr/share/man/it/man1/vim.1.gz --slave /usr/share/man/pl/man1/vi.1.gz vi.pl.1.gz /usr/share/man/pl/man1/vim.1.gz --slave /usr/share/man/ru/man1/vi.1.gz vi.ru.1.gz /usr/share/man/ru/man1/vim.1.gz --slave /usr/share/man/ja/man1/vi.1.gz vi.ja.1.gz /usr/share/man/ja/man1/vim.1.gz --slave /usr/share/man/man1/vi.1.gz vi.1.gz /usr/share/man/man1/vim.1.gz
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: link group vi updated to point to /usr/bin/vim.basic
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: run with --install /usr/bin/view view /usr/bin/vim.basic 30 --slave /usr/share/man/fr/man1/view.1.gz view.fr.1.gz /usr/share/man/fr/man1/vim.1.gz --slave /usr/share/man/it/man1/view.1.gz view.it.1.gz /usr/share/man/it/man1/vim.1.gz --slave /usr/share/man/pl/man1/view.1.gz view.pl.1.gz /usr/share/man/pl/man1/vim.1.gz --slave /usr/share/man/ru/man1/view.1.gz view.ru.1.gz /usr/share/man/ru/man1/vim.1.gz --slave /usr/share/man/ja/man1/view.1.gz view.ja.1.gz /usr/share/man/ja/man1/vim.1.gz --slave /usr/share/man/man1/view.1.gz view.1.gz /usr/share/man/man1/vim.1.gz
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: link group view updated to point to /usr/bin/vim.basic
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: run with --install /usr/bin/ex ex /usr/bin/vim.basic 30 --slave /usr/share/man/fr/man1/ex.1.gz ex.fr.1.gz /usr/share/man/fr/man1/vim.1.gz --slave /usr/share/man/it/man1/ex.1.gz ex.it.1.gz /usr/share/man/it/man1/vim.1.gz --slave /usr/share/man/pl/man1/ex.1.gz ex.pl.1.gz /usr/share/man/pl/man1/vim.1.gz --slave /usr/share/man/ru/man1/ex.1.gz ex.ru.1.gz /usr/share/man/ru/man1/vim.1.gz --slave /usr/share/man/ja/man1/ex.1.gz ex.ja.1.gz /usr/share/man/ja/man1/vim.1.gz --slave /usr/share/man/man1/ex.1.gz ex.1.gz /usr/share/man/man1/vim.1.gz
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: link group ex updated to point to /usr/bin/vim.basic
+192.168.7.12,/var/log/alternatives.log,update-alternatives 2017-07-10 17:26:45: run with --install /usr/bin/editor editor /usr/bin/vim.basic 30 --slave /usr/share/man/fr/man1/editor.1.gz editor.fr.1.gz /usr/share/man/fr/man1/vim.1.gz --slave /usr/share/man/it/man1/editor.1.gz editor.it.1.gz /usr/share/man/it/man1/vim.1.gz --slave /usr/share/man/pl/man1/editor.1.gz editor.pl.1.gz /usr/share/man/pl/man1/vim.1.gz --slave /usr/share/man/ru/man1/editor.1.gz editor.ru.1.gz /usr/share/man/ru/man1/vim.1.gz --slave /usr/share/man/ja/man1/editor.1.gz editor.ja.1.gz /usr/share/man/ja/man1/vim.1.gz --slave /usr/share/man/man1/editor.1.gz editor.1.gz /usr/share/man/man1/vim.1.gz
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) evdev: Logitech USB Keyboard: Close
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) evdev: PixArt HP USB Optical Mouse: Close
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) evdev: Power Button: Close
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) evdev: Power Button: Close
+192.168.7.12,/var/log/Xorg.2.log,[   970.516] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.2.log,[   970.517] (II) Server terminated successfully (0). Closing log file.
+192.168.7.12,/var/log/bootstrap.log,update-initramfs: deferring update (trigger activated)
+192.168.7.12,/var/log/bootstrap.log,Setting up python3 (3.5.1-3) ...
+192.168.7.12,/var/log/bootstrap.log,Setting up lsb-release (9.20160110) ...
+192.168.7.12,/var/log/bootstrap.log,Setting up ubuntu-minimal (1.361) ...
+192.168.7.12,/var/log/bootstrap.log,Setting up dh-python (2.20151103ubuntu1) ...
+192.168.7.12,/var/log/bootstrap.log,Processing triggers for libc-bin (2.23-0ubuntu3) ...
+192.168.7.12,/var/log/bootstrap.log,Processing triggers for systemd (229-4ubuntu4) ...
+192.168.7.12,/var/log/bootstrap.log,Processing triggers for initramfs-tools (0.122ubuntu8) ...
+192.168.7.12,/var/log/bootstrap.log,Processing triggers for ureadahead (0.100.0-19) ...
+192.168.7.12,/var/log/bootstrap.log,Processing triggers for resolvconf (1.78ubuntu2) ...
+192.168.7.12,/var/log/gpu-manager.log,Is fglrx available? no
+192.168.7.12,/var/log/gpu-manager.log,Is fglrx-core available? no
+192.168.7.12,/var/log/gpu-manager.log,Is mesa available? yes
+192.168.7.12,/var/log/gpu-manager.log,Is mesa egl available? yes
+192.168.7.12,/var/log/gpu-manager.log,Is pxpress available? no
+192.168.7.12,/var/log/gpu-manager.log,Is prime available? no
+192.168.7.12,/var/log/gpu-manager.log,Is prime egl available? no
+192.168.7.12,/var/log/gpu-manager.log,Single card detected
+192.168.7.12,/var/log/gpu-manager.log,Nothing to do
+192.168.7.12,/var/log/gpu-manager.log,No change - nothing to do
+192.168.7.12,/var/log/fontconfig.log,/usr/local/share/fonts: skipping, existing cache is valid: 0 fonts, 0 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts: caching, new cache contents: 0 fonts, 5 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/X11: caching, new cache contents: 0 fonts, 4 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/X11/encodings: caching, new cache contents: 0 fonts, 1 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/cmap: caching, new cache contents: 0 fonts, 5 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/opentype: caching, new cache contents: 0 fonts, 3 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/truetype: caching, new cache contents: 1 fonts, 19 dirs
+192.168.7.12,/var/log/fontconfig.log,Re-scanning /usr/share/fonts/type1: caching, new cache contents: 0 fonts, 1 dirs
+192.168.7.12,/var/log/fontconfig.log,/var/cache/fontconfig: cleaning cache directory
+192.168.7.12,/var/log/fontconfig.log,fc-cache: succeeded
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-18 02:28:26,592 INFO Starting unattended upgrades script
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-18 02:28:26,592 INFO Allowed origins are: ['o=Ubuntu,a=xenial', 'o=Ubuntu,a=xenial-security', 'o=UbuntuESM,a=xenial']
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-18 02:28:28,893 INFO No packages found that can be upgraded unattended and no pending auto-removals
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:15,593 INFO Initial blacklisted packages: 
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:15,593 INFO Initial whitelisted packages: 
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:15,593 INFO Starting unattended upgrades script
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:15,593 INFO Allowed origins are: ['o=Ubuntu,a=xenial', 'o=Ubuntu,a=xenial-security', 'o=UbuntuESM,a=xenial']
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:21,624 INFO Packages that will be upgraded: apport apport-gtk python3-apport python3-problem-report
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:21,624 INFO Writing dpkg log to '/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades.log,2017-07-19 10:52:57,052 INFO All upgrades installed
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Processing triggers for gnome-menus (3.13.3-6ubuntu3.1) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Processing triggers for bamfdaemon (0.5.3~bzr0+16.04.20160824-0ubuntu1) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Rebuilding /usr/share/applications/bamf-2.index...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Processing triggers for mime-support (3.59ubuntu1) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Setting up python3-problem-report (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Setting up python3-apport (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Setting up apport (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Setting up apport-gtk (2.20.1-0ubuntu2.10) ...
+192.168.7.12,/var/log/unattended-upgrades/unattended-upgrades-dpkg.log,Log ended: 2017-07-19  10:52:57
+192.168.7.12,/var/log/Xorg.1.log,[  1024.852] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.1.log,[  1024.852] (II) evdev: Logitech USB Keyboard: Close
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) evdev: PixArt HP USB Optical Mouse: Close
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) evdev: Power Button: Close
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) evdev: Power Button: Close
+192.168.7.12,/var/log/Xorg.1.log,[  1024.853] (II) UnloadModule: "evdev"
+192.168.7.12,/var/log/Xorg.1.log,[  1024.854] (II) Server terminated successfully (0). Closing log file.
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'dhcp-option' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'dhcp-option' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Options error: option 'route' cannot be used in this context ([PUSH-OPTIONS])
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: OPTIONS IMPORT: timers and/or timeouts modified
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: OPTIONS IMPORT: --ifconfig/up options modified
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Preserving previous TUN/TAP instance: tun0
+192.168.7.12,/var/log/syslog,Jul 19 12:54:12 tunneluser ovpn-client[941]: Initialization Sequence Completed
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd[1]: Starting Cleanup of Temporary Directories...
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd-tmpfiles[18367]: [/usr/lib/tmpfiles.d/var.conf:14] Duplicate line for path "/var/log", ignoring.
+192.168.7.12,/var/log/syslog,Jul 19 12:54:55 tunneluser systemd[1]: Started Cleanup of Temporary Directories.
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:21 ubuntu /plugininstall.py: log-output -t ubiquity chroot /target mount -t securityfs securityfs /sys/kernel/security
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:22 ubuntu ubiquity:  * Recaching AppArmor profiles
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:23 ubuntu ubiquity: Skipping profile in /etc/apparmor.d/disable: usr.bin.firefox
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:24 ubuntu ubiquity: Skipping profile in /etc/apparmor.d/disable: usr.sbin.rsyslogd
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:25 ubuntu ubiquity:    ...done.
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:25 ubuntu /plugininstall.py: log-output -t ubiquity chroot /target /etc/init.d/apparmor recache
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:25 ubuntu /plugininstall.py: log-output -t ubiquity chroot /target umount /proc
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:25 ubuntu /plugininstall.py: log-output -t ubiquity chroot /target umount /sys/kernel/security
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:25 ubuntu /plugininstall.py: log-output -t ubiquity chroot /target umount /sys
+192.168.7.12,/var/log/installer/syslog,Jul 10 03:36:26 ubuntu ubiquity: sudo: unable to resolve host ubuntu: Connection refused
+192.168.7.12,/var/log/installer/casper.log,Found label 'Ubuntu 16.04.2 LTS _Xenial Xerus_ - Release amd64 (20170215.2)'
+192.168.7.12,/var/log/installer/casper.log,This disc is called: 
+192.168.7.12,/var/log/installer/casper.log,'Ubuntu 16.04.2 LTS _Xenial Xerus_ - Release amd64 (20170215.2)'
+192.168.7.12,/var/log/installer/casper.log,Copying package lists...gpgv: Signature made Wed Feb 15 21:43:35 2017 UTC using RSA key ID EFE21092
+192.168.7.12,/var/log/installer/casper.log,gpgv: Good signature from "Ubuntu CD Image Automatic Signing Key (2012) <cdimage@ubuntu.com>"
+192.168.7.12,/var/log/installer/casper.log,Reading Package Indexes... 0%Reading Package Indexes... Done
+192.168.7.12,/var/log/installer/casper.log,Writing new source list
+192.168.7.12,/var/log/installer/casper.log,Source list entries for this disc are:
+192.168.7.12,/var/log/installer/casper.log,deb cdrom:[Ubuntu 16.04.2 LTS _Xenial Xerus_ - Release amd64 (20170215.2)]/ xenial main restricted
+192.168.7.12,/var/log/installer/casper.log,Repeat this process for the rest of the CDs in your set.
+192.168.7.12,/var/log/syslog,Hi Jet\n
+192.168.7.12,/var/log/syslog,Hi Jet\n
+192.168.7.12,/var/log/syslog,Hi Jet
+192.168.7.12,/var/log/syslog,Hi Jet

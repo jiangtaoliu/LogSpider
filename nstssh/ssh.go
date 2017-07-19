@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net"
 	"os/exec"
 	"strings"
 	"sync"
@@ -84,6 +85,7 @@ func (c *SessionCommand) Output() ([]byte, error) {
 	}
 	return out, nil
 }
+
 func (c *SessionCommand) Run() error {
 	var errBuf bytes.Buffer
 	c.Session.Stderr = &errBuf
@@ -132,31 +134,6 @@ func (c *SystemCommand) Run() error {
 	return nil
 }
 
-func PasswordCommand(host string, password string, command string) (string, error) {
-	config := &ssh.ClientConfig{
-		User: "root",
-		Auth: []ssh.AuthMethod{
-			ssh.Password(password),
-		},
-		Timeout: CONNECTION_TIMEOUT,
-	}
-	config.SetDefaults()
-	config.Ciphers = append(config.Ciphers, "aes128-cbc")
-	client, err := ssh.Dial("tcp", host+":22", config)
-	if err != nil {
-		return "", err
-	}
-	session, err := client.NewSession()
-	if err != nil {
-		return "", err
-	}
-	out, err := session.Output(command)
-	if err != nil {
-		return string(out), err
-	}
-	return string(out), err
-}
-
 func sshClient(host string) (*ssh.Client, error) {
 	mapMutex.RLock()
 	client, ok := connectionCache[host]
@@ -166,11 +143,14 @@ func sshClient(host string) (*ssh.Client, error) {
 	}
 	mapMutex.RUnlock()
 	config := &ssh.ClientConfig{
-		User: "root",
+		User: "logspider",
 		Auth: []ssh.AuthMethod{
 			IDENTITY,
 		},
 		Timeout: CONNECTION_TIMEOUT,
+		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+			return nil
+		},
 	}
 	config.SetDefaults()
 	config.Ciphers = append(config.Ciphers, "aes128-cbc")
@@ -182,26 +162,6 @@ func sshClient(host string) (*ssh.Client, error) {
 		mapMutex.Unlock()
 	}
 	return client, err
-}
-
-func CopyID(from string, to string, toPassword string) error {
-	cmd := Command(to, "uname")
-	if cmd == nil {
-		return errors.New("No connection to host")
-	}
-	if cmd.Run() != nil {
-		return nil
-	}
-	cmd = Command(from, "cat", IDENTITY_PATH+".pub")
-	data, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	_, err = PasswordCommand(to, toPassword, fmt.Sprintf("echo '%s' >> ~/.ssh/authorized_keys", string(data)))
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func SetupMultiPlexing(host string) error {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bahusvel/NetworkScannerThingy/nstssh"
+	"github.com/bahusvel/LogSpider/nstssh"
 )
 
 var CurrentTime = time.Now()
@@ -40,7 +40,7 @@ func isExclude(log string) bool {
 }
 
 func FindLogs(host string) ([]string, error) {
-	cmd := nstssh.Command(host, "find", "/var", "-name", "*.log")
+	cmd := nstssh.Command(host, "find /var/log -name *log 2>/dev/null || true")
 	if cmd == nil {
 		return []string{}, errors.New("Cannot establish connection")
 	}

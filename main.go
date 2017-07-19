@@ -1,16 +1,19 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"log"
+	"net"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
-	//"github.com/bahusvel/NetworkScannerThingy/analyse"
-	"github.com/bahusvel/NetworkScannerThingy/logs"
-	"github.com/bahusvel/NetworkScannerThingy/nstssh"
-	"github.com/bahusvel/NetworkScannerThingy/scan"
+	//"github.com/bahusvel/LogSpider/analyse"
+	"github.com/bahusvel/LogSpider/logs"
+	"github.com/bahusvel/LogSpider/nstssh"
 	"github.com/urfave/cli"
 )
 
@@ -35,117 +38,86 @@ type Host struct {
 	SSHEnabled bool
 }
 
+type ConnectionError struct {
+	Host  string
+	Error error
+}
+
 var mapMutex = sync.RWMutex{}
 var hostMap = map[string]*Host{}
 var scannerTimer *time.Timer
 var logChannel = make(chan logs.LogEntry)
+var connectionChannel = make(chan ConnectionError)
 
-var passwords []string
+func SpiderHost(host string) {
+	time.Sleep(1 * time.Second)
+	cmd := nstssh.Command(host, "echo", "1")
+	if cmd == nil {
+		log.Println("Cannot establish ssh connectivity to", host, errors.New("cmd is nil"))
+		connectionChannel <- ConnectionError{host, errors.New("cmd is nil")}
+		return
+	}
 
-func newHost(address string) (*Host, error) {
-	log.Println("New Host", address)
-	host := &Host{IPAddress: address, SSHEnabled: true}
+	err := cmd.Run()
 
-	mapMutex.Lock()
-	hostMap[address] = host
-	mapMutex.Unlock()
-	var err error
-	for _, password := range passwords {
-		err = nstssh.CopyID("localhost", host.IPAddress, password)
-		if err == nil {
+	if err != nil {
+		log.Println("Cannot establish ssh connectivity to", host, err)
+		connectionChannel <- ConnectionError{host, err}
+		return
+	}
+
+	hostLogs, err := logs.FindLogs(host)
+	if err != nil {
+		log.Println("Cannot fetch logs from", host, err)
+		connectionChannel <- ConnectionError{host, err}
+		return
+	}
+
+	log.Println("Found logs", hostLogs)
+
+	for _, hostLog := range hostLogs {
+		err := logs.WatchLog(host, hostLog, logChannel)
+		if err != nil {
+			log.Printf("Cannot open log %s at %s %s\n", host, hostLog, err)
+		}
+	}
+
+	for {
+		err := nstssh.Command(host, "echo", "1").Run()
+
+		if err != nil {
+			log.Println("Cannot establish ssh connectivity to", host, err)
+			connectionChannel <- ConnectionError{host, err}
+			return
+		}
+	}
+}
+
+func incrementIP(ip net.IP) net.IP {
+	for j := len(ip) - 1; j >= 0; j-- {
+		ip[j]++
+		if ip[j] > 0 {
 			break
 		}
 	}
-	if err != nil {
-		log.Println("Cannot establish ssh connectivity to", host, err)
-		host.SSHEnabled = false
-		return host, err
-	}
-	err = nstssh.SetupMultiPlexing(host.IPAddress)
-	if err != nil {
-		log.Println(err)
-		return host, err
-	}
-	return host, nil
+	return ip
 }
 
-func hostAlive(host string) {
-	mapMutex.RLock()
-	existingHost, ok := hostMap[host]
-	mapMutex.RUnlock()
-	if !ok {
-		var err error
-		existingHost, err = newHost(host)
-		if err != nil {
-			log.Println(err)
-		}
+func IPRange(iprange string) ([]string, error) {
+	parts := strings.Split(iprange, "-")
+	if len(parts) != 2 {
+		return []string{}, errors.New("Invalid IP Range Format")
 	}
-
-	if existingHost.Status != STATUS_UP {
-		existingHost.Status = STATUS_UP
-		existingHost.StatusTime = time.Now()
-		start := time.Now()
-		for {
-			err := hostUp(existingHost)
-			if err == nil {
-				break
-			}
-			if time.Now().Sub(start) > HOST_TIMEOUT {
-				log.Printf("Connection to %s timeout\n", existingHost.IPAddress)
-				break
-			}
-			time.Sleep(1 * time.Second)
-			log.Println("Retrying connection to", host)
-		}
-	} else {
-		existingHost.Status = STATUS_UP
-		existingHost.StatusTime = time.Now()
+	end := net.ParseIP(parts[1])
+	ips := []string{}
+	for ip := net.ParseIP(parts[0]); bytes.Compare(ip, end) <= 0; ip = incrementIP(ip) {
+		ips = append(ips, ip.String())
 	}
-
-}
-
-func hostUp(host *Host) error {
-	log.Println("Host went up", host)
-
-	if !host.SSHEnabled {
-		return nil
-	}
-
-	hostLogs, err := logs.FindLogs(host.IPAddress)
-	if err != nil {
-		log.Println("Cannot fetch logs from", host)
-		return err
-	}
-
-	for _, hostLog := range hostLogs {
-		err := logs.WatchLog(host.IPAddress, hostLog, logChannel)
-		if err != nil {
-			log.Printf("Cannot open log %s at %s %s\n", host.IPAddress, hostLog, err)
-		}
-	}
-	return nil
-}
-
-func hostDown(host *Host) {
-	host.Status = STATUS_DOWN
-	host.StatusTime = time.Now()
-	log.Println("Host down", host)
-}
-
-func timeoutScanner() {
-	timeout := time.Now().Add(-HOST_TIMEOUT)
-	mapMutex.RLock()
-	for _, host := range hostMap {
-		if host.Status == STATUS_UP && host.StatusTime.Before(timeout) {
-			hostDown(host)
-		}
-	}
-	mapMutex.RUnlock()
-	scannerTimer.Reset(HOST_TIMEOUT)
+	return ips, nil
 }
 
 func main() {
-	nstssh.Init(os.Getenv("HOME") + "/.ssh/id_rsa")
+	nstssh.Init("./id_rsa")
 	app := cli.NewApp()
 
 	app.Flags = []cli.Flag{
@@ -155,19 +127,12 @@ func main() {
 		cli.StringFlag{
 			Name: "output, o",
 		},
-		cli.StringSliceFlag{
-			Name: "password, p",
-		},
 	}
 	//knowledgeBase := make(analyse.KnowledgeDB)
 	app.Action = func(c *cli.Context) error {
 
 		if len(c.StringSlice("ipranges")) == 0 {
 			return cli.NewExitError("You did not specify any ranges", -1)
-		}
-
-		if len(c.StringSlice("password")) == 0 {
-			return cli.NewExitError("You did not specify any passwords", -1)
 		}
 
 		if c.String("output") == "" {
@@ -181,21 +146,22 @@ func main() {
 
 		ips := []string{}
 		for _, iprange := range c.StringSlice("ipranges") {
-			ipsInRange, err := scan.IPRange(iprange)
+			ipsInRange, err := IPRange(iprange)
 			if err != nil {
 				return err
 			}
 			ips = append(ips, ipsInRange...)
 		}
-		log.Println("Pinging hosts", ips)
-		pingChan := make(chan string)
-		scan.Init(pingChan)
-		go scan.PingHosts(ips)
-		scannerTimer = time.AfterFunc(HOST_TIMEOUT, timeoutScanner)
+
+		for _, ip := range ips {
+			log.Println("Spidering", ip)
+			go SpiderHost(ip)
+		}
+
 		for {
 			select {
-			case host := <-pingChan:
-				go hostAlive(host)
+			case connectionError := <-connectionChannel:
+				go SpiderHost(connectionError.Host)
 			case logEntry := <-logChannel:
 				//_, isNew := knowledgeBase.Classify(logEntry)
 				//if isNew {
