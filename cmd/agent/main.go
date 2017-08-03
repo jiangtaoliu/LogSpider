@@ -19,6 +19,13 @@ type Priority int
 //var logs []chan *tail.Line
 var logs []reflect.SelectCase
 var logPaths []string
+var conn net.Conn
+var hostName, _ = os.Hostname()
+var Quiet = false
+
+//var re = regexp.MustCompile("[[:^ascii:]]")
+
+var blacklist = []string{"flowd.log"}
 
 type LogLine struct {
 	Line string
@@ -31,6 +38,11 @@ func newFilePoller(Dirs []string) {
 		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 			if !strings.HasSuffix(path, "log") {
 				return nil
+			}
+			for _, b := range blacklist {
+				if strings.HasSuffix(path, b) {
+					return nil
+				}
 			}
 			log.Println(path)
 			t, err := tail.TailFile(path, tail.Config{Follow: true, ReOpen: true})
@@ -55,7 +67,7 @@ func interrupt(intchan chan int) {
 func DefaultFormatter(p Priority, hostname, tag, content string) string {
 	timestamp := time.Now().Format(time.RFC3339)
 	msg := fmt.Sprintf("<%d> %s %s %s[%d]: %s",
-		p, timestamp, hostname, tag, os.Getpid(), content)
+		p, timestamp, hostname, tag, 0, content)
 	return msg
 }
 
@@ -85,6 +97,13 @@ func RFC5424Formatter(p Priority, hostname, tag, content string) string {
 	return msg
 }
 
+func ProcessLogEntry(line *LogLine) {
+	conn.Write([]byte(DefaultFormatter(0, hostName, line.File, line.Line)))
+	if !Quiet {
+		log.Println(line.File, line.Line)
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 
@@ -94,6 +113,13 @@ func main() {
 		},
 		cli.StringFlag{
 			Name: "server, s",
+		},
+		cli.StringSliceFlag{
+			Name: "blacklist, b",
+		},
+		cli.BoolFlag{
+			Name:        "queit, q",
+			Destination: &Quiet,
 		},
 	}
 	//knowledgeBase := make(analyse.KnowledgeDB)
@@ -107,7 +133,10 @@ func main() {
 			return cli.NewExitError("You must provide the server IP", -1)
 		}
 
-		conn, err := net.Dial("udp", c.String("server"))
+		blacklist = append(blacklist, c.StringSlice("blacklist")...)
+
+		var err error
+		conn, err = net.Dial("udp", c.String("server"))
 		if err != nil {
 			return err
 		}
@@ -126,8 +155,8 @@ func main() {
 			case *tail.Line:
 				tline := value.Interface().(*tail.Line)
 				line := LogLine{Line: tline.Text, Time: tline.Time, File: logPaths[i-1]}
-				conn.Write([]byte(DefaultFormatter(0, "denispc", line.File, line.Line)))
-				log.Println(line)
+				ProcessLogEntry(&line)
+
 				//time.Sleep(10 * time.Millisecond)
 			default:
 			}
