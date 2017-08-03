@@ -126,8 +126,9 @@ func main() {
 			case *tail.Line:
 				tline := value.Interface().(*tail.Line)
 				line := LogLine{Line: tline.Text, Time: tline.Time, File: logPaths[i-1]}
-				conn.Write([]byte(UnixFormatter(0, line.Time, "", line.File, line.Line)))
+				conn.Write([]byte(DefaultFormatter(0, "denispc", line.File, line.Line)))
 				log.Println(line)
+				//time.Sleep(10 * time.Millisecond)
 			default:
 			}
 
