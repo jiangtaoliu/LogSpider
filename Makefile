@@ -1,6 +1,6 @@
 BUILD_DIR=build/
-BUILD_OS=linux darwin freebsd
-BUILD_ARCH=386 amd64
+BUILD_OS=linux darwin freebsd android openbsd netbsd
+BUILD_ARCH=386 amd64 arm64
 BUILD_ARM=5 6 7
 
 clean:
