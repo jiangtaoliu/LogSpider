@@ -86,7 +86,9 @@ func main() {
 				if err != nil {
 					log.Fatal(err)
 				}
-				fmt.Println(logParts)
+				if !Quiet {
+					fmt.Println(logParts)
+				}
 			}
 		}(channel)
 
