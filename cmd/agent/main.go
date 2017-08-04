@@ -47,7 +47,7 @@ func newFilePoller(Dirs []string) {
 				}
 			}
 			log.Println(path)
-			t, err := tail.TailFile(path, tail.Config{Follow: true, ReOpen: true})
+			t, err := tail.TailFile(path, tail.Config{Follow: true, ReOpen: true, Location: &tail.SeekInfo{0, os.SEEK_END}})
 			if err != nil {
 				log.Println("Error", path, err)
 			}
