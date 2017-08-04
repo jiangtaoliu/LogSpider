@@ -92,9 +92,9 @@ func RFC3164Formatter(p Priority, hostname, tag, content string) string {
 // RFC5424Formatter provides an RFC 5424 compliant message.
 func RFC5424Formatter(p Priority, hostname, tag, content string) string {
 	timestamp := time.Now().Format(time.RFC3339)
-	pid := os.Getpid()
-	appName := os.Args[0]
-	msg := fmt.Sprintf("<%d>%d %s %s %s %d %s - %s",
+	pid := 0
+	appName := "logspider-agent"
+	msg := fmt.Sprintf("<%d>%d %s %s %s %d %s - %s\n",
 		p, 1, timestamp, hostname, appName, pid, tag, content)
 	return msg
 }
@@ -107,7 +107,7 @@ func SendLogMessage(line *LogLine) error {
 			return err
 		}
 	}
-	_, err := conn.Write([]byte(DefaultFormatter(0, hostName, line.File, line.Line)))
+	_, err := conn.Write([]byte(RFC5424Formatter(0, hostName, line.File, line.Line)))
 	if err != nil {
 		conn = nil
 	}
