@@ -47,8 +47,14 @@ func main() {
 	server := syslog.NewServer()
 	server.SetFormat(syslog.RFC5424)
 	server.SetHandler(handler)
-	server.ListenTCP("0.0.0.0:514")
-	server.Boot()
+	err := server.ListenTCP("0.0.0.0:514")
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = server.Boot()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	go func(channel syslog.LogPartsChannel) {
 		for logParts := range channel {
