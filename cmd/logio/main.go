@@ -69,7 +69,7 @@ func main() {
 		handler := syslog.NewChannelHandler(channel)
 
 		server := syslog.NewServer()
-		server.SetFormat(syslog.RFC5424)
+		server.SetFormat(syslog.RFC3164)
 		server.SetHandler(handler)
 		err := server.ListenTCP(ListenAddr)
 		if err != nil {
@@ -79,15 +79,26 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Println("ListenAddr", ListenAddr)
 
 		go func(channel syslog.LogPartsChannel) {
-			for logParts := range channel {
-				err := SendLog(&LogLine{logParts["message"].(string), logParts["msg_id"].(string), logParts["hostname"].(string)})
-				if err != nil {
-					log.Fatal(err)
+			defer func() {
+				if n := recover(); n != nil {
+					log.Println("Exception", n)
 				}
-				if !Quiet {
-					fmt.Println(logParts)
+			}()
+			log.Println("channel", channel)
+			for logParts := range channel {
+				//streams := strings.Fields(logParts["content"].(string))[2]
+				//streamstr := strings.Replace(streams, "[0]:", "", -1)
+				if logParts["hostname"].(string) != "monitoringvm" {
+					err := SendLog(&LogLine{logParts["content"].(string), logParts["tag"].(string), logParts["hostname"].(string)})
+					if err != nil {
+						log.Fatal(err)
+					}
+					if !Quiet {
+						fmt.Println(logParts)
+					}
 				}
 			}
 		}(channel)

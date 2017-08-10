@@ -67,7 +67,7 @@ func interrupt(intchan chan int) {
 }
 
 func DefaultFormatter(p Priority, hostname, tag, content string) string {
-	timestamp := time.Now().Format(time.RFC3339)
+	timestamp := time.Now().Format(time.Stamp)
 	msg := fmt.Sprintf("<%d> %s %s %s[%d]: %s\n",
 		p, timestamp, hostname, tag, 0, content)
 	return msg
